@@ -9,7 +9,11 @@
         ]"
     >
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">My Vue front-end</a>
+            <a
+                class="navbar-brand"
+                href="#"
+                >My Vue front-end</a
+            >
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li
                     v-for="(page, index) in pages"
@@ -25,7 +29,10 @@
                 </li>
             </ul>
             <form class="d-flex">
-                <button class="btn btn-primary" @click.prevent="changeTheme()">
+                <button
+                    class="btn btn-primary"
+                    @click.prevent="changeTheme()"
+                >
                     Toggle navbar
                 </button>
             </form>
@@ -34,17 +41,17 @@
 </template>
 
 <script>
-import NavbarLink from './NavbarLink.vue';
+import NavbarLink from "./NavbarLink.vue";
 
 export default {
     components: {
-        NavbarLink
+        NavbarLink,
     },
 
     created() {
         this.getThemeSetting();
     },
-    
+
     props: ["pages", "activePage", "navLinkClick"],
 
     data() {
@@ -52,7 +59,7 @@ export default {
             theme: "light",
         };
     },
-    
+
     methods: {
         changeTheme() {
             let theme = "light";
@@ -64,15 +71,15 @@ export default {
             this.storeThemeSetting();
         },
         storeThemeSetting() {
-            localStorage.setItem('theme', this.theme);
+            localStorage.setItem("theme", this.theme);
         },
         getThemeSetting() {
-            let theme = localStorage.getItem('theme');
+            let theme = localStorage.getItem("theme");
 
-            if(theme) {
+            if (theme) {
                 this.theme = theme;
             }
-        }
+        },
     },
 };
 </script>

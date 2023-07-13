@@ -12,11 +12,11 @@ export default {
             type: Object,
             default(rawProps) {
                 return {
-                    pageTitle: '',
-                    content: ''
+                    pageTitle: "",
+                    content: "",
                 };
-            }
-        }
+            },
+        },
     },
 };
 </script>

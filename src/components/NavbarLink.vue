@@ -22,7 +22,7 @@ export default {
 };
 </script>
 <style>
-.emphasize scoped{
+.emphasize {
     text-decoration: underline !important;
 }
 </style>
