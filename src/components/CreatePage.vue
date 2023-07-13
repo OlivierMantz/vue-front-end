@@ -17,19 +17,33 @@
                 <label
                     for=""
                     class="form-label"
-                    >Content</label
+                    >Description</label
                 >
                 <textarea
                     type="text"
                     class="form-control"
                     rows="5"
-                    v-model="content"
+                    v-model="description"
+                ></textarea>
+            </div>
+            <div class="mb-3">
+                <label
+                    for=""
+                    class="form-label"
+                    >Image to upload</label
+                >
+                <textarea
+                    type="text"
+                    class="form-control"
+                    rows="5"
+                    v-model="imageToUpload"
                 ></textarea>
             </div>
             <div class="mb-3">
                 <button
                     class="btn btn-primary"
-                    @click.prevent="pageCreated({ pageTitle, content })"
+                    :disabled="isFormInvalid"
+                    @click.prevent="submitForm"
                 >
                     Create Page
                 </button>
@@ -41,11 +55,39 @@
 <script>
 export default {
     props: ["pageCreated"],
+    computed: {
+        isFormInvalid() {
+            return !this.pageTitle || !this.description || !this.imageToUpload;
+        },
+    },
+
     data() {
         return {
             pageTitle: "",
-            content: "",
+            description: "",
+            imageToUpload: "",
         };
+    },
+    methods: {
+        submitForm() {
+            if (this.isFormInvalid) {
+                alert("Please fil out all required fields.");
+                return;
+            }
+            this.$emit("pageCreated", {
+                pageTitle: this.pageTitle,
+                description: this.description,
+                imageToUpload: this.imageToUpload,
+            });
+
+            this.clearForm({});
+        },
+
+        clearForm() {
+            this.pageTitle = "";
+            this.description = "";
+            this.imageToUpload = "";
+        },
     },
 };
 </script>

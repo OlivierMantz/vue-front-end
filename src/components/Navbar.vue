@@ -15,17 +15,24 @@
                 >My Vue front-end</a
             >
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li
+                <navbar-link
                     v-for="(page, index) in pages"
                     class="nav-item"
                     :key="index"
+                    :page="page"
+                    :index="index"
+                    :isActive="activePage == index"
+                    @activated="$emit('activated')"
                 >
-                    <navbar-link
-                        :page="page"
-                        :isActive="activePage == index"
-                        @click.prevent="navLinkClick(index)"
+                </navbar-link>
+
+                <li>
+                    <router-link
+                        to="/create"
+                        class="nav-link"
+                        aria-current="page"
+                        >Create page</router-link
                     >
-                    </navbar-link>
                 </li>
             </ul>
             <form class="d-flex">
@@ -52,7 +59,7 @@ export default {
         this.getThemeSetting();
     },
 
-    props: ["pages", "activePage", "navLinkClick"],
+    props: ["pages", "activePage"],
 
     data() {
         return {
