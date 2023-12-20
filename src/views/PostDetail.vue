@@ -1,19 +1,25 @@
 <template>
-    <div v-if="post">
+    <div
+        v-if="post"
+        class="post-container"
+    >
         <h1>{{ post.title }}</h1>
         <img
             :src="post.image"
             :alt="`Post ${post.postId}`"
             class="post-image"
         />
-        <div v-if="comments && comments.length">
+        <div
+            v-if="comments && comments.length"
+            class="comments-container"
+        >
             <h2>Comments</h2>
             <div
                 v-for="comment in comments"
                 :key="comment.commentId"
             >
-                <strong>{{ comment.authorUsername }}</strong
-                >: {{ comment.text }}
+                <em> {{ comment.authorUsername }}: </em>
+                <q>{{ comment.text }}</q>
             </div>
         </div>
         <div v-else>No comments yet.</div>
@@ -50,7 +56,6 @@ export default {
             return;
         }
 
-
         try {
             this.post = await getPostById(_postId);
         } catch (error) {
@@ -67,8 +72,29 @@ export default {
 </script>
 
 <style>
+.post-container {
+    margin: 50px auto;
+    max-width: 600px;
+    background-color: #2a3a3d;
+    color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.comments-container {
+    margin: 10px auto;
+    max-width: 600px;
+    background-color: #4d6367;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 .post-image {
-    width: 50%;
+    width: 100%;
+    cursor: pointer;
+
     height: auto;
+    border-radius: 10px;
 }
 </style>

@@ -25,5 +25,5 @@ export default {
 </script>
 <style>
 .active {
-    color: #007bff; /* Example: Change color for active link */
+    color: #007bff;
 }</style>

@@ -1,14 +1,23 @@
 <template>
     <div id="app">
-        <Navbar/>
-        <router-view/>    
+        <Navbar />
+        <router-view />
     </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar.vue";
+import { provide, ref } from "vue";
 
 export default {
+    setup(){
+        const isDarkMode = ref(false);
+        provide('isDarkMode', isDarkMode); // Provide the state
+
+        return {
+            isDarkMode,
+        };
+    },
     components: {
         Navbar,
     },
@@ -23,6 +32,4 @@ export default {
 };
 </script>
 
-<style>
-/* Your existing styles */
-</style>
+<style></style>

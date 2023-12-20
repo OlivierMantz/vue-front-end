@@ -4,6 +4,8 @@ import router from "./router";
 import { createAuth0 } from "@auth0/auth0-vue";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./components/Navbar.vue";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const app = createApp(App);

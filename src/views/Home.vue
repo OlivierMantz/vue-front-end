@@ -1,8 +1,8 @@
 <template>
     <div>
         <hr />
-        <homeContent />
         <button @click="showToken">Show Token</button>
+        <homeContent />
     </div>
 </template>
 

@@ -7,7 +7,7 @@
         <div
             v-for="post in posts"
             :key="post.postId"
-            class="post-overview"
+            class="post-container"
             @click="goToPostDetail(post.postId)"
         >
             <h3>{{ post.title }}</h3>
@@ -45,12 +45,21 @@ export default {
 </script>
 
 <style scoped>
-.post-overview {
-    cursor: pointer;
+.post-container {
+    margin: 50px auto;
+    max-width: 600px;
+    background-color: #2a3a3d;
+    color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .post-image {
-    width: 50%;
+    width: 100%;
+    cursor: pointer;
+
     height: auto;
+    border-radius: 5px; 
 }
 </style>

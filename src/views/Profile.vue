@@ -1,9 +1,7 @@
 <template>
     <div>
-        <h2>User Profile</h2>
-        <button @click="login">Log in</button>
         <pre v-if="isAuthenticated">
-            <code>{{ user }}</code>
+            <h2><strong>{{ user.nickname }}</strong>'s Profile</h2>
         </pre>
     </div>
 </template>
