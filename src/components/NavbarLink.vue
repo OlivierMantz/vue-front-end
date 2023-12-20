@@ -3,6 +3,7 @@
         <router-link
             :to="to"
             class="nav-link"
+            active-class="active"
             >{{ label }}</router-link
         >
     </li>
@@ -22,3 +23,7 @@ export default {
     },
 };
 </script>
+<style>
+.active {
+    color: #007bff; /* Example: Change color for active link */
+}</style>

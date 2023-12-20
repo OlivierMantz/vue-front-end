@@ -19,8 +19,8 @@
                     label="Profile"
                 />
             </ul>
-            <button @click="login">Log in</button>
-            <button @click="logout">Log out</button>
+            <button v-if="!isAuthenticated" @click="login">Log in</button>
+            <button v-if="isAuthenticated" @click="logout">Log out</button>
         </div>
     </nav>
 </template>
@@ -33,9 +33,9 @@ export default {
     components: {
         NavbarLink,
     },
-    name: "NavBar",
+    name: "Navbar",
     setup() {
-        const { loginWithRedirect, logout } = useAuth0();
+        const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
         const login = () => {
             loginWithRedirect({
@@ -50,6 +50,7 @@ export default {
         return {
             login,
             logout: performLogout,
+            isAuthenticated
         };
     },
 };
