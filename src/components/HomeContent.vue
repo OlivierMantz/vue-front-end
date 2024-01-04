@@ -1,19 +1,17 @@
 <template>
     <div>
         <h2>All Posts</h2>
-        <div v-if="posts.length === 0">
-            No posts found
-        </div>
+        <div v-if="posts.length === 0">No posts found</div>
         <div
             v-for="post in posts"
-            :key="post.postId"
+            :key="post.id"
             class="post-container"
-            @click="goToPostDetail(post.postId)"
+            @click="goToPostDetails(post.id)"
         >
             <h3>{{ post.title }}</h3>
             <img
-                :src="post.image"
-                :alt="'Post ' + post.postId"
+                :src="getImageUrl(post.imageFileName, post.fileExtension)"
+                :alt="'Output: ' + getImageUrl(post.imageFileName, post.fileExtension)"
                 class="post-image"
             />
         </div>
@@ -21,7 +19,8 @@
 </template>
 
 <script>
-import { getAllPosts } from '../services/api';
+import { getAllPosts } from "../services/postService";
+import { IMAGE_API_BASE_URL } from "../services/imageService";
 
 export default {
     data() {
@@ -33,12 +32,20 @@ export default {
         try {
             this.posts = await getAllPosts();
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            console.error("Error fetching posts:", error);
         }
     },
     methods: {
-        goToPostDetail(postId) {
-            this.$router.push({ name: "post", params: { postId: postId } });
+        goToPostDetails(postId) {
+            this.$router.push({
+                name: "PostDetails",
+                params: { postId: postId },
+            });
+        },
+        getImageUrl(imageFileName, fileExtension) {
+            return imageFileName
+                ? `${IMAGE_API_BASE_URL}/${imageFileName}${fileExtension}`
+                : "";
         },
     },
 };
@@ -60,6 +67,7 @@ export default {
     cursor: pointer;
 
     height: auto;
-    border-radius: 5px; 
+    border-radius: 5px;
 }
 </style>
+../services/CommentAPI

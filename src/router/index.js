@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
-import PostDetail from "../views/PostDetail.vue";
+import PostDetails from "../views/PostDetails.vue";
+import PostCreationPage from "../views/PostCreationPage.vue";
 
 const base = import.meta.env.VITE_APP_BASE_URL || "/";
 
@@ -17,13 +18,15 @@ const routes = [
         component: Profile,
     },
     {
-        path: "/post/:postId",
-        name: "post",
-        component: PostDetail,
-        props: (route) => ({
-            postId: Number(route.params.postId)
-        }),
+        path: "/posts/:postId",
+        name: "PostDetails",
+        component: PostDetails,
     },
+    {
+        path: '/post-Creation-Page',
+        name: 'PostCreationPage',
+        component: PostCreationPage,
+    }
 ];
 
 const router = createRouter({

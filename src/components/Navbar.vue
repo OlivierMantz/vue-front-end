@@ -1,7 +1,10 @@
 <template>
     <nav
         class="navbar navbar-expand-md"
-        :class="{ 'navbar-dark bg-dark': isDarkMode, 'navbar-light bg-light': !isDarkMode }"
+        :class="{
+            'navbar-dark bg-dark': isDarkMode,
+            'navbar-light bg-light': !isDarkMode,
+        }"
     >
         <a
             class="navbar-brand"
@@ -34,6 +37,11 @@
                     to="/profile"
                     label="Profile"
                 />
+                <NavbarLink
+                    v-if="isAuthenticated"
+                    to="/post-Creation-Page"
+                    label="Post Creation Page"
+                />
             </ul>
             <button
                 v-if="!isAuthenticated"
@@ -64,14 +72,14 @@ export default {
     },
     name: "Navbar",
     setup() {
-        const isDarkMode = inject('isDarkMode');
+        const isDarkMode = inject("isDarkMode");
         const toggleDarkMode = () => {
             isDarkMode.value = !isDarkMode.value;
             document.body.classList.toggle("dark-mode", isDarkMode.value);
         };
-        
+
         const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
-        
+
         const login = () => {
             loginWithRedirect({
                 screen_hint: "signup",
@@ -81,7 +89,6 @@ export default {
         const performLogout = () => {
             logout({ returnTo: window.location.origin });
         };
-
 
         return {
             login,
@@ -104,10 +111,10 @@ export default {
     color: white;
 }
 .dark-mode .navbar {
-    background-color: #424242; 
+    background-color: #424242;
 }
-.dark-mode .navbar .navbar-brand, .nav-link {
-    color: white; 
+.dark-mode .navbar .navbar-brand,
+.nav-link {
+    color: white;
 }
-
 </style>
