@@ -1,4 +1,5 @@
 <template>
+    <!-- Post image and details -->
     <div
         v-if="post"
         class="post-container"
@@ -10,38 +11,81 @@
             :alt="`Post ${post.id}`"
             class="post-image"
         />
+
         <div>
             <h2>Description</h2>
             <p>{{ post.description }}</p>
         </div>
-        <div
-            v-if="comments && comments.length"
-            class="comments-container"
-        >
-            <h2>Comments</h2>
-            <div
-                v-for="comment in comments"
-                :key="comment.id"
-                class="comment-container"
-            >
-                <div>
-                    <em>{{ comment.authorUsername }}: </em>
-                    <q>{{ comment.content }}</q>
-                </div>
 
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <h2>Comments</h2>
+
+            <!-- New Comment Section -->
+            <div
+                v-if="isAuthenticated"
+                class="new-comment-container"
+            >
+                <input
+                    type="text"
+                    v-model="newComment"
+                    placeholder="Write a comment..."
+                />
+                <button @click="submitComment">Submit</button>
+            </div>
+
+            <!-- Existing Comments Section -->
+            <div v-if="comments && comments.length">
                 <div
-                    v-if="
-                        isAuthenticated &&
-                        (isUserAuthor(comment.authorId) || isAdmin)
-                    "
-                    class="comment-actions"
+                    v-for="comment in comments"
+                    :key="comment.id"
+                    class="comment-item"
                 >
-                    <button class="btn btn-edit">Update</button>
-                    <button class="btn btn-delete">Delete</button>
+                    <div v-if="editingCommentId === comment.id">
+                        <input
+                            type="text"
+                            v-model="tempCommentContent"
+                        />
+                        <button @click="updateComment(comment.id)">Save</button>
+                        <button @click="cancelEdit">Cancel</button>
+                    </div>
+                    <div v-else>
+                        <em>{{ comment.authorId }}: </em>
+                        <br />
+                        <div style="text-indent: 2.5%">
+                            {{ comment.content }}
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="showEditedMsg && editingCommentId === comment.id"
+                    >
+                        Edited
+                    </div>
+
+                    <div
+                        v-if="
+                            isAuthenticated &&
+                            (isUserAuthor(comment.authorId) || isAdmin)
+                        "
+                    >
+                        <button
+                            class="btn btn-edit"
+                            @click="editComment(comment)"
+                        >
+                            Update
+                        </button>
+                        <button
+                            class="btn btn-delete"
+                            @click="deleteComment(comment.id)"
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </div>
             </div>
+            <div v-else>No comments yet.</div>
         </div>
-        <div v-else>No comments yet.</div>
     </div>
     <div v-else>Post does not exist</div>
 </template>
@@ -50,6 +94,7 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 import {
     getCommentsByPostId,
+    createComment,
     updateComment,
     deleteComment,
 } from "../services/commentService";
@@ -64,6 +109,10 @@ export default {
             post: null,
             comments: null,
             isAdmin: false,
+            newComment: "",
+            editingCommentId: null,
+            tempCommentContent: "",
+            showEditedMsg: false,
         };
     },
     async mounted() {
@@ -116,13 +165,73 @@ export default {
         },
     },
     methods: {
-        async updateComment(commentId, updatedComent) {
-            console.log("Update comment:", commentId);
-            updateComment(commentId, updatedComent);
+        async submitComment() {
+            try {
+                const token = await this.$auth0.getAccessTokenSilently();
+                const newCommentData = { content: this.newComment };
+                const newComment = await createComment(
+                    this.post.id,
+                    newCommentData,
+                    token
+                );
+
+                this.comments.push(newComment);
+                this.newComment = "";
+            } catch (error) {
+                console.error("Error submitting comment:", error.message);
+            }
         },
+
+        async updateComment(commentId) {
+            if (
+                this.tempCommentContent !==
+                this.comments.find((c) => c.id === commentId).content
+            ) {
+                try {
+                    const token = await this.$auth0.getAccessTokenSilently();
+                    const updatedCommentData = {
+                        content: this.tempCommentContent,
+                    };
+                    await updateComment(commentId, updatedCommentData, token);
+
+                    const commentIndex = this.comments.findIndex(
+                        (c) => c.id === commentId
+                    );
+                    if (commentIndex !== -1) {
+                        this.comments[commentIndex].content =
+                            this.tempCommentContent;
+                        this.showEditedMsg = true;
+                        setTimeout(() => (this.showEditedMsg = false), 3000);
+                    }
+                    this.editingCommentId = null;
+                    this.tempCommentContent = "";
+                } catch (error) {
+                    console.error("Error updating comment:", error.message);
+                }
+            } else {
+                this.cancelEdit();
+            }
+        },
+
+        editComment(comment) {
+            this.editingCommentId = comment.id;
+            this.tempCommentContent = comment.content;
+        },
+
+        cancelEdit() {
+            this.editingCommentId = null;
+            this.tempCommentContent = "";
+        },
+
         async deleteComment(commentId) {
-            console.log("Delete comment:", commentId);
-            deleteComment(commentId);
+            try {
+                const token = await this.$auth0.getAccessTokenSilently();
+                await deleteComment(commentId, token);
+
+                this.comments = this.comments.filter((c) => c.id !== commentId);
+            } catch (error) {
+                console.error("Error deleting comment:", error.message);
+            }
         },
         async checkAdminStatus() {
             try {
@@ -138,7 +247,7 @@ export default {
 
         isUserAuthor(commentAuthorId) {
             const user = this.user;
-            return user && user.sub === commentAuthorId;
+            return user && user.value.sub === commentAuthorId;
         },
     },
 };
@@ -155,6 +264,14 @@ export default {
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.post-image {
+    width: 100%;
+    cursor: pointer;
+
+    height: auto;
+    border-radius: 10px;
+}
 .comments-container {
     margin: 10px auto;
     max-width: 600px;
@@ -164,12 +281,30 @@ export default {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.post-image {
-    width: 100%;
+.new-comment-container {
+    margin-bottom: 15px;
+}
+.new-comment-container input {
+    width: 80%;
+    padding: 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+.new-comment-container button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #697d88;
+    border: white 1px solid;
+    color: white;
     cursor: pointer;
-
-    height: auto;
-    border-radius: 10px;
+}
+.new-comment-container button:hover {
+    background-color: #65787f;
+}
+.existing-comments-container {
+    background-color: #5b757a;
 }
 .btn {
     background-color: #55666f;
@@ -188,7 +323,7 @@ export default {
 
 .btn-edit {
     margin-right: 10px;
-    background-color: #4a5a60; 
+    background-color: #4a5a60;
 }
 
 .btn-delete {
