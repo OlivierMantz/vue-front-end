@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-vue";
+
 const commentApiUrl = import.meta.env.VITE_COMMENT_API_URL;
 
 export const COMMENT_API_BASE_URL = "http://localhost:5092/api/Comments";
@@ -19,7 +21,9 @@ async function getAuthToken() {
 // Get comments for a specific post
 export const getCommentsByPostId = async (postId) => {
     try {
-        const response = await apiClient.get(`${COMMENT_API_BASE_URL}/post/${postId}`);
+        const response = await apiClient.get(
+            `${COMMENT_API_BASE_URL}/post/${postId}`
+        );
 
         return response.data;
     } catch (error) {
@@ -28,12 +32,15 @@ export const getCommentsByPostId = async (postId) => {
 };
 
 // Create a new comment
-export const createComment = async (postId, commentData) => {
+export const createComment = async (postId, commentData, token) => {
     try {
-        const token = await getAuthToken();
-        const response = await apiClient.post(`/comments/post/${postId}`, commentData, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient.post(
+            `${COMMENT_API_BASE_URL}/post/${postId}`,
+            commentData,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
         return response.data;
     } catch (error) {
         throw new Error("Error creating comment: " + error.message);
@@ -41,12 +48,15 @@ export const createComment = async (postId, commentData) => {
 };
 
 // Update a comment
-export const updateComment = async (commentId, commentData) => {
+export const updateComment = async (commentId, commentData, token) => {
     try {
-        const token = await getAuthToken();
-        const response = await apiClient.put(`/comments/${commentId}`, commentData, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient.put(
+            `${COMMENT_API_BASE_URL}/${commentId}`,
+            commentData,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
         return response.data;
     } catch (error) {
         throw new Error("Error updating comment: " + error.message);
@@ -54,10 +64,9 @@ export const updateComment = async (commentId, commentData) => {
 };
 
 // Delete a comment
-export const deleteComment = async (commentId) => {
+export const deleteComment = async (commentId, token) => {
     try {
-        const token = await getAuthToken();
-        await apiClient.delete(`/comments/${commentId}`, {
+        await apiClient.delete(`${COMMENT_API_BASE_URL}/${commentId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
     } catch (error) {

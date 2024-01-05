@@ -39,10 +39,7 @@ export default {
             if (this.file && this.title && this.description) {
                 try {
                     const token = await this.$auth0.getAccessTokenSilently();
-                    console.log("Token:", token);
-                    console.log("Uploading file:", this.file);
                     const imageResponse = await uploadImage(this.file, token);
-                    console.log("Image upload response:", imageResponse);
 
                     if (!imageResponse || !imageResponse.guid) {
                         console.error("Image upload failed:", imageResponse);
@@ -61,7 +58,6 @@ export default {
                         token
                     );
 
-                    console.log("Post creation response:", postResponse);
                     this.$router.push("/");
                 } catch (error) {
                     console.error("Error uploading post:", error);
