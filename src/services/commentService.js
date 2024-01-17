@@ -1,12 +1,9 @@
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-vue";
 
-const commentApiUrl = import.meta.env.VITE_COMMENT_API_URL;
-
 export const COMMENT_API_BASE_URL = "http://localhost:5092/api/Comments";
 
 const apiClient = axios.create({
-    baseURL: commentApiUrl,
     headers: {
         "Content-Type": "application/json",
     },

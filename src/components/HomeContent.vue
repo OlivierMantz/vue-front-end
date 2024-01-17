@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>All Posts</h2>
+        <h2 style="text-align: center;">All Posts</h2>
         <div v-if="posts.length === 0">No posts found</div>
         <div
             v-for="post in posts"

@@ -1,5 +1,4 @@
 import axios from "axios";
-const apiUrl = import.meta.env.VITE_API_URL;
 import { useAuth0 } from "@auth0/auth0-vue";
 
 export const IMAGE_API_BASE_URL = "http://localhost:5242/api/Images";

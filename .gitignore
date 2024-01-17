@@ -29,3 +29,5 @@ coverage
 .env
 
 auth_config.json
+certs/cert.pem
+certs/key.pem

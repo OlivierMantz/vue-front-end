@@ -1,5 +1,4 @@
 import axios from "axios";
-const apiUrl = import.meta.env.VITE_API_URL;
 import { useAuth0 } from "@auth0/auth0-vue";
 
 const POST_API_BASE_URL = "http://localhost:5205/api/Posts";
@@ -8,7 +7,7 @@ const POST_API_BASE_URL = "http://localhost:5205/api/Posts";
 // POSTS API Calls
 export const getAllPosts = async () => {
     try {
-        const response = await axios.get(POST_API_BASE_URL);
+        const response = await axios.get(`${POST_API_BASE_URL}/`);
         return response.data;
     } catch (error) {
         console.error("Error fetching all posts:", error);
@@ -37,8 +36,7 @@ export const createPost = async (postData, token) => {
         console.log("post response", response);
         return response.data;
     } catch (error) {
-        console.error("Error creating post:", error);
-        throw error;
+        throw new Error("Error creating post:", error);
     }
 };
 

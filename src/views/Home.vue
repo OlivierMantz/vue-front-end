@@ -1,7 +1,5 @@
 <template>
     <div>
-        <hr />
-        <button @click="showToken">Show Token</button>
         <homeContent />
     </div>
 </template>
@@ -14,9 +12,7 @@ export default {
         HomeContent,
     },
     methods: {
-        async showToken() {
-            console.log(this.$auth0); 
-        }
+        
     }
 };
 </script>

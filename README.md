@@ -10,6 +10,10 @@ npm install
 npm run serve
 ```
 
+Or ```
+npm run dev --https
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
